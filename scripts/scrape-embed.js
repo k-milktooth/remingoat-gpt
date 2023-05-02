@@ -2,9 +2,13 @@ const { XMLParser } = require("fast-xml-parser");
 const cheerio = require("cheerio");
 const axios = require("axios");
 const { Document } = require("langchain/document");
+const fs = require("fs");
 
 // Sitemap URL
 const REMINGOAT_SITEMAP_URL = "https://www.theremingoat.com/sitemap.xml";
+
+// JSON file containing the scraped data
+const JSON_FILENAME = "remingoat.json";
 
 async function getUrlsFromSitemap() {
   // Load the sitemap XML
@@ -29,7 +33,7 @@ async function getEssay(essayUrl) {
   // Get text from the article
   const articleContents = $(".blog-item-inner-wrapper")
     .clone()
-    .find("figcaption, figure") // Remove captions and figures/images
+    .find("figcaption, figure, div.gallery-block, div.blog-item-meta-wrapper") // Remove captions, figures/images
     .remove()
     .end()
     .text();
@@ -51,14 +55,23 @@ async function getEssay(essayUrl) {
 
 (async function run() {
   try {
-    console.log();
     const urls = await getUrlsFromSitemap(REMINGOAT_SITEMAP_URL);
 
-    //for (const url of urls) {
-    //await getEssay(url);
-    //}
+    const documents = [];
 
-    await getEssay(urls[51]);
+    for (const url of urls) {
+      const doc = await getEssay(url);
+      documents.push(...doc);
+    }
+
+    console.log("Data extracted from URLs");
+
+    const json = JSON.stringify(documents);
+
+    fs.writeFileSync(JSON_FILENAME, json);
+    console.log(`Data written to ${JSON_FILENAME}`);
+
+    return documents;
   } catch (error) {
     console.error("Error occured:", error);
   }
