@@ -20,10 +20,10 @@ async function initPinecone() {
       environment: process.env.PINECONE_ENVIRONMENT,
     });
 
-    return pinecone;
+    return pineconeClient;
   } catch (error) {
     console.error(error);
-    throw new Error("Failed to initialize Pinecone client");
+    throw new Error("Failed to initialize Pinecone client: ", error.message);
   }
 }
 
