@@ -1,38 +1,48 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# RemingoatGPT - AI-powered chatbot for theRemingoat switch reviews 🐐🤖
 
-## Getting Started
+[https://remingoat-gpt.netlify.app/](https://remingoat-gpt.netlify.app/)
 
-First, run the development server:
+## Motivation
 
-```bash
+It's no surprise that [theRemingoat switch reviews](https://www.theremingoat.com/), coming in at thousands of words each, are the most detailed switch reviews available. However, this verbosity has one major downside: it becomes unwieldy to read any given review, not to mention multiple reviews for when you're comparing many switches.
+
+The obvious alternative is to not read the reviews and simply browse the provided score sheets. This shortcut is more time-efficient but ultimately lacks nuance. The scores simply reflect theRemingoat's preferences, which you won't be mirroring. In other words, without context, scores are meaningless.
+
+RemingoatGPT seeks to mitigate the downsides of **both** long-winded reviews and reductionist score sheets. An AI-powered Q&A chatbot that lets you query detailed data as needed could be the perfect synthesis of detail and efficiency—simply query and read what's relevant to you.
+
+We hope RemingoatGPT facilitates an easier and more successful switch discovery and research process!
+
+## Development
+
+1. Clone the repo
+
+```
+git clone https://github.com/k-milktooth/remingoat-gpt.git
+```
+
+2. Install packages
+
+```
+npm i
+```
+
+3. Set up your `.env` file
+
+- Copy `.env.local.example` into `.env`
+- Fill in API keys
+  - Visit [OpenAI](https://help.openai.com/en/articles/4936850-where-do-i-find-my-secret-api-key) to retrieve your OpenAI API key.
+  - Visit [Pinecone](https://pinecone.io/) to create an index. Then, from the dashboard, retrieve the appropriate Pinecone API key, environment and index name.
+
+4. Ingest data
+
+- Run `npm run ingest`
+  - First, we scrape [theremingoat.com](https://www.theremingoat.com/) for switch reviews
+  - Then, we create embeddings and save them to our Pinecone index
+
+5. Run the app
+
+```
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
