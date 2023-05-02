@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "autoprefixer": "10.4.14",
+    "cheerio": "^1.0.0-rc.12",
     "eslint": "8.39.0",
     "eslint-config-next": "13.3.4",
     "next": "13.3.4",
