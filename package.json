@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "scrape-embed": "node scripts/scrape-embed.js"
+    "scrape-embed": "node scripts/scrape-embed.js",
+    "demo-query": "node scripts/demo-query.js"
   },
   "dependencies": {
     "@pinecone-database/pinecone": "^0.0.14",
