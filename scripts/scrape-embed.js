@@ -1,6 +1,7 @@
 const { DOMParser } = require("xmldom");
 const cheerio = require("cheerio");
 const axios = require("axios");
+const { Document } = require("langchain/document");
 
 // Sitemap URL
 const REMINGOAT_SITEMAP_URL = "https://www.theremingoat.com/sitemap.xml";
@@ -38,7 +39,6 @@ async function getEssay(essayUrl) {
     .end()
     .text();
 
-  // Clean up the article contents
   const cleanedArticleContents = articleContents
     .replace(/\s+/g, " ") // Replace multiple spaces with a single space
     .replace(/Sponsors\/Affiliates.*/gi, "") // Remove text after "Sponsors/Affiliates"
@@ -51,9 +51,7 @@ async function getEssay(essayUrl) {
     contentLength: cleanedArticleContents?.match(/\b\w+\b/g)?.length ?? 0,
   };
 
-  console.log(metadata);
-
-  return cleanedArticleContents;
+  return [new Document({ pageContent: cleanedArticleContents, metadata })];
 }
 
 (async function run() {
