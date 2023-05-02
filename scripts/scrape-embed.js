@@ -2,6 +2,7 @@ const { XMLParser } = require("fast-xml-parser");
 const cheerio = require("cheerio");
 const axios = require("axios");
 const { Document } = require("langchain/document");
+const { RecursiveCharacterTextSplitter } = require("langchain/text_splitter");
 const fs = require("fs");
 
 // Sitemap URL
@@ -53,25 +54,35 @@ async function getEssay(essayUrl) {
   return [new Document({ pageContent: cleanedArticleContents, metadata })];
 }
 
+async function splitDocsIntoChunks(docs) {
+  const textSplitter = new RecursiveCharacterTextSplitter({
+    chunkSize: 2000,
+    chunkOverlap: 200,
+  });
+
+  return await textSplitter.splitDocuments(docs);
+}
+
 (async function run() {
   try {
     const urls = await getUrlsFromSitemap(REMINGOAT_SITEMAP_URL);
 
-    const documents = [];
+    const rawDocs = [];
 
     for (const url of urls) {
       const doc = await getEssay(url);
-      documents.push(...doc);
+      rawDocs.push(...doc);
     }
 
     console.log("Data extracted from URLs");
 
-    const json = JSON.stringify(documents);
-
+    const json = JSON.stringify(rawDocs);
     fs.writeFileSync(JSON_FILENAME, json);
     console.log(`Data written to ${JSON_FILENAME}`);
 
-    return documents;
+    // Split docs into chunks for OpenAI context window
+    const docs = await splitDocsIntoChunks(rawDocs);
+    console.log(docs);
   } catch (error) {
     console.error("Error occured:", error);
   }
