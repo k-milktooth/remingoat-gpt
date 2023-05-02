@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "scrape-embed": "node scripts/scrape-embed.js",
+    "ingest": "node scripts/ingest.js",
     "demo-query": "node scripts/demo-query.js"
   },
   "dependencies": {
