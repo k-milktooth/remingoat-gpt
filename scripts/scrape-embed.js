@@ -1,4 +1,4 @@
-const { DOMParser } = require("xmldom");
+const { XMLParser } = require("fast-xml-parser");
 const cheerio = require("cheerio");
 const axios = require("axios");
 const { Document } = require("langchain/document");
@@ -11,17 +11,12 @@ async function getUrlsFromSitemap() {
   const response = await fetch(REMINGOAT_SITEMAP_URL);
   const xmlString = await response.text();
 
-  // Create a new DOMParser object
-  const parser = new DOMParser();
-
   // Parse the sitemap XML
-  const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+  const parser = new XMLParser();
+  const parsedXml = parser.parse(xmlString);
 
   // Get all the loc elements from the sitemap
-  const locs = xmlDoc.getElementsByTagName("loc");
-
-  // Return the loc URLs as an array of strings
-  const urls = Array.from(locs).map((loc) => loc.textContent);
+  const urls = parsedXml.urlset.url.map((url) => url.loc);
 
   return urls;
 }
