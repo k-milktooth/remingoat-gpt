@@ -2,6 +2,7 @@ import { useRef, useState, useEffect, useMemo } from "react";
 import { Disclosure } from "@headlessui/react";
 import ReactMarkdown from "react-markdown";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
+import { end, message, sourceDocuments } from "@/utils/object-identifiers";
 
 export default function Home() {
   const [query, setQuery] = useState("");
@@ -63,26 +64,34 @@ export default function Home() {
         }),
         signal: ctrl.signal,
         onmessage: (event) => {
-          if (event.data === "[DONE]") {
-            setMessageState((state) => ({
-              history: [...state.history, [question, state.pending ?? ""]],
-              messages: [
-                ...state.messages,
-                {
-                  type: "apiMessage",
-                  message: state.pending ?? "",
-                },
-              ],
-              pending: undefined,
-            }));
-            setLoading(false);
-            ctrl.abort();
-          } else {
-            const data = JSON.parse(event.data);
-            setMessageState((state) => ({
-              ...state,
-              pending: (state.pending ?? "") + data.data,
-            }));
+          const data = JSON.parse(event.data);
+          switch (data.object) {
+            case end:
+              setMessageState((state) => ({
+                history: [...state.history, [question, state.pending ?? ""]],
+                messages: [
+                  ...state.messages,
+                  {
+                    type: "apiMessage",
+                    message: state.pending ?? "",
+                  },
+                ],
+                pending: undefined,
+              }));
+
+              setLoading(false);
+              ctrl.abort();
+              break;
+
+            case message:
+              setMessageState((state) => ({
+                ...state,
+                pending: (state.pending ?? "") + data.data,
+              }));
+              break;
+
+            default:
+            // Do nothing
           }
         },
       });
