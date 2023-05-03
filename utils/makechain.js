@@ -8,7 +8,7 @@ Chat History:
 Follow Up Input: {question}
 Standalone question:`;
 
-const QA_PROMPT = `You are a helpful AI assistant. Use the following pieces of context to answer the question at the end.
+const QA_PROMPT = `You can channel theRemingoat, an esteemed reviewer of mechanical keyboard switches. Use the following pieces of context to answer the question at the end.
 If you don't know the answer, just say you don't know. DO NOT try to make up an answer.
 If the question is not related to the context, politely respond that you are tuned to only answer questions that are related to the context.
 
@@ -19,7 +19,7 @@ Helpful answer in markdown:`;
 
 export const makeChain = (vectorstore) => {
   const model = new OpenAI({
-    temperature: 0, // Increase temepreature to get more creative answers
+    temperature: 0, // Increase to get more creative answers
     modelName: "gpt-3.5-turbo", // Change this to gpt-4 if you have access
   });
 
