@@ -10,11 +10,12 @@ export default function Home() {
   const [error, setError] = useState(null);
   const [messageState, setMessageState] = useState({
     messages: [],
-    pending: "",
     history: [],
+    pending: "", // Saves the response from the current query
+    pendingSourceDocs: [], // Saves the source documents from current query
   });
 
-  const { messages, pending, history } = messageState;
+  const { messages, history, pending } = messageState;
 
   const messageListRef = useRef(null);
   const textAreaRef = useRef(null);
@@ -68,15 +69,20 @@ export default function Home() {
           switch (data.object) {
             case end:
               setMessageState((state) => ({
+                ...state,
                 history: [...state.history, [question, state.pending ?? ""]],
                 messages: [
                   ...state.messages,
                   {
                     type: "apiMessage",
                     message: state.pending ?? "",
+                    sourceDocs: state.pendingSourceDocs,
                   },
                 ],
+
+                // Reset for the next query
                 pending: undefined,
+                pendingSourceDocs: [],
               }));
 
               setLoading(false);
@@ -86,8 +92,16 @@ export default function Home() {
             case message:
               setMessageState((state) => ({
                 ...state,
-                pending: (state.pending ?? "") + data.data,
+                pending: (state.pending ?? "") + data.data, // Build up the current response token by token
               }));
+              break;
+
+            case sourceDocuments:
+              setMessageState((state) => ({
+                ...state,
+                pendingSourceDocs: data.data, // Set the source documents for the current response
+              }));
+
               break;
 
             default:
@@ -97,7 +111,7 @@ export default function Home() {
       });
     } catch (error) {
       setLoading(false);
-      console.log("Error: ", error);
+      console.error("Error: ", error);
     }
   }
 
@@ -123,50 +137,49 @@ export default function Home() {
         <h1 className="mt-12 text-2xl font-bold leading-[1.1] tracking-tighter text-center">
           RemingoatGPT
         </h1>
-        <main className="p-24">
-          <div>
-            <div ref={messageListRef}>
-              {chatMessages.map((message, index) => {
-                let className;
-                if (message.type === "apiMessage") {
-                  className = "bg-gray-100";
-                } else {
-                  className =
-                    loading && index === chatMessages.length - 1
-                      ? "bg-red-100 animate-pulse"
-                      : "bg-blue-100";
-                }
-                return (
-                  <div key={index} className={className}>
-                    <ReactMarkdown linkTarget="_blank">
-                      {message.message}
-                    </ReactMarkdown>
-                    {message.sourceDocs && (
-                      <div key={`messageSourceDocs-${index}`}>
-                        {message.sourceDocs.map((doc, index) => (
-                          <Disclosure>
-                            <Disclosure.Button>
-                              <h3>Source {index + 1}</h3>
-                            </Disclosure.Button>
-                            <Disclosure.Panel>
-                              <ReactMarkdown linkTarget="_blank">
-                                {doc.pageContent}
-                              </ReactMarkdown>
-                              <p className="mt-2">
-                                <span>Source:</span>{" "}
-                                <a target="_blank" href={doc.metadata.source}>
-                                  {doc.metadata.source}
-                                </a>
-                              </p>
-                            </Disclosure.Panel>
-                          </Disclosure>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+        <main className="lg:p-24">
+          <div ref={messageListRef}>
+            {chatMessages.map((message, index) => {
+              let className;
+              if (message.type === "apiMessage") {
+                className = "bg-gray-100";
+              } else {
+                className =
+                  loading && index === chatMessages.length - 1
+                    ? "bg-red-100 animate-pulse"
+                    : "bg-blue-100";
+              }
+
+              return (
+                <div key={index} className={className}>
+                  <ReactMarkdown linkTarget="_blank">
+                    {message.message}
+                  </ReactMarkdown>
+                  {message.sourceDocs && (
+                    <>
+                      {message.sourceDocs.map((doc, sourceDocIndex) => (
+                        <Disclosure key={`messageSourceDocs-${sourceDocIndex}`}>
+                          <Disclosure.Button>
+                            <h3>Source {sourceDocIndex + 1}</h3>
+                          </Disclosure.Button>
+                          <Disclosure.Panel>
+                            <ReactMarkdown linkTarget="_blank">
+                              {doc.pageContent}
+                            </ReactMarkdown>
+                            <p className="mt-2">
+                              <span>Source:</span>{" "}
+                              <a target="_blank" href={doc.metadata.source}>
+                                {doc.metadata.source}
+                              </a>
+                            </p>
+                          </Disclosure.Panel>
+                        </Disclosure>
+                      ))}
+                    </>
+                  )}
+                </div>
+              );
+            })}
           </div>
           <div>
             <div>
