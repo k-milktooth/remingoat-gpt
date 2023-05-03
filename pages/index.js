@@ -3,6 +3,7 @@ import { Disclosure } from "@headlessui/react";
 import ReactMarkdown from "react-markdown";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import { end, message, sourceDocuments } from "@/utils/object-identifiers";
+import { ChevronUpIcon } from "@heroicons/react/20/solid";
 
 export default function Home() {
   const [query, setQuery] = useState("");
@@ -137,7 +138,7 @@ export default function Home() {
         <h1 className="mt-12 text-2xl font-bold leading-[1.1] tracking-tighter text-center">
           RemingoatGPT
         </h1>
-        <main className="lg:p-24">
+        <main className="">
           <div ref={messageListRef}>
             {chatMessages.map((message, index) => {
               let className;
@@ -156,26 +157,44 @@ export default function Home() {
                     {message.message}
                   </ReactMarkdown>
                   {message.sourceDocs && (
-                    <>
-                      {message.sourceDocs.map((doc, sourceDocIndex) => (
-                        <Disclosure key={`messageSourceDocs-${sourceDocIndex}`}>
-                          <Disclosure.Button>
-                            <h3>Source {sourceDocIndex + 1}</h3>
+                    <Disclosure>
+                      {({ open }) => (
+                        <>
+                          <Disclosure.Button className="bg-purple-100 grid grid-cols-2 w-full px-2 py-1">
+                            <h3 className="justify-self-start">Sources</h3>
+                            <ChevronUpIcon
+                              className={`${
+                                open ? "rotate-180 transform" : ""
+                              } h-5 w-5 justify-self-end`}
+                            />
                           </Disclosure.Button>
                           <Disclosure.Panel>
-                            <ReactMarkdown linkTarget="_blank">
-                              {doc.pageContent}
-                            </ReactMarkdown>
-                            <p className="mt-2">
-                              <span>Source:</span>{" "}
-                              <a target="_blank" href={doc.metadata.source}>
-                                {doc.metadata.source}
-                              </a>
-                            </p>
+                            {message.sourceDocs.map((doc, sourceDocIndex) => (
+                              <div key={`messageSourceDocs-${sourceDocIndex}`}>
+                                <Disclosure>
+                                  <Disclosure.Button>
+                                    <h4>Source {sourceDocIndex + 1}</h4>
+                                  </Disclosure.Button>
+                                  <Disclosure.Panel>
+                                    <ReactMarkdown linkTarget="_blank">
+                                      {doc.pageContent}
+                                    </ReactMarkdown>
+                                    <p className="mt-2">
+                                      <a
+                                        target="_blank"
+                                        href={doc.metadata.source}
+                                      >
+                                        {doc.metadata.source}
+                                      </a>
+                                    </p>
+                                  </Disclosure.Panel>
+                                </Disclosure>
+                              </div>
+                            ))}
                           </Disclosure.Panel>
-                        </Disclosure>
-                      ))}
-                    </>
+                        </>
+                      )}
+                    </Disclosure>
                   )}
                 </div>
               );
