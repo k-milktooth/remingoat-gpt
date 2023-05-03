@@ -58,7 +58,7 @@ export default async function handler(req, res) {
       chat_history: history || [],
     });
   } catch (error) {
-    console.log("error", error);
+    console.error("Error: ", error.message);
   } finally {
     sendData("[DONE]");
     res.end();
