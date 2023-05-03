@@ -33,7 +33,9 @@ export default async function handler(req, res) {
     );
 
     // Create chain
-    const chain = makeChain(vectorStore);
+    const chain = makeChain(vectorStore, (token) => {
+      sendData(JSON.stringify({ data: token }));
+    });
 
     // Ask a question using chat history
     const response = await chain.call({
