@@ -63,7 +63,6 @@ export default function Home() {
         }),
         signal: ctrl.signal,
         onmessage: (event) => {
-          console.log("event", event);
           if (event.data === "[DONE]") {
             setMessageState((state) => ({
               history: [...state.history, [question, state.pending ?? ""]],
@@ -80,7 +79,6 @@ export default function Home() {
             ctrl.abort();
           } else {
             const data = JSON.parse(event.data);
-            console.log("data", data);
             setMessageState((state) => ({
               ...state,
               pending: (state.pending ?? "") + data.data,
@@ -120,7 +118,6 @@ export default function Home() {
           <div>
             <div ref={messageListRef}>
               {chatMessages.map((message, index) => {
-                let icon;
                 let className;
                 if (message.type === "apiMessage") {
                   className = "bg-gray-100";
@@ -131,40 +128,33 @@ export default function Home() {
                       : "bg-blue-100";
                 }
                 return (
-                  <>
-                    <div key={index} className={className}>
-                      {icon}
-                      <div>
-                        <ReactMarkdown linkTarget="_blank">
-                          {message.message}
-                        </ReactMarkdown>
-                      </div>
-                    </div>
+                  <div key={index} className={className}>
+                    <ReactMarkdown linkTarget="_blank">
+                      {message.message}
+                    </ReactMarkdown>
                     {message.sourceDocs && (
-                      <>
+                      <div key={`messageSourceDocs-${index}`}>
                         {message.sourceDocs.map((doc, index) => (
-                          <div key={`messageSourceDocs-${index}`}>
-                            <Disclosure>
-                              <Disclosure.Button>
-                                <h3>Source {index + 1}</h3>
-                              </Disclosure.Button>
-                              <Disclosure.Panel>
-                                <ReactMarkdown linkTarget="_blank">
-                                  {doc.pageContent}
-                                </ReactMarkdown>
-                                <p className="mt-2">
-                                  <span>Source:</span>{" "}
-                                  <a target="_blank" href={doc.metadata.source}>
-                                    {doc.metadata.source}
-                                  </a>
-                                </p>
-                              </Disclosure.Panel>
-                            </Disclosure>
-                          </div>
+                          <Disclosure>
+                            <Disclosure.Button>
+                              <h3>Source {index + 1}</h3>
+                            </Disclosure.Button>
+                            <Disclosure.Panel>
+                              <ReactMarkdown linkTarget="_blank">
+                                {doc.pageContent}
+                              </ReactMarkdown>
+                              <p className="mt-2">
+                                <span>Source:</span>{" "}
+                                <a target="_blank" href={doc.metadata.source}>
+                                  {doc.metadata.source}
+                                </a>
+                              </p>
+                            </Disclosure.Panel>
+                          </Disclosure>
                         ))}
-                      </>
+                      </div>
                     )}
-                  </>
+                  </div>
                 );
               })}
             </div>
