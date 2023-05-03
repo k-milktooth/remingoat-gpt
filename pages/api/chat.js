@@ -40,27 +40,39 @@ export default async function handler(req, res) {
     Connection: "keep-alive",
   });
 
+  // Ad-hoc "pipe" to send stuff to front-end
   const sendData = (data) => {
-    res.write(`data: ${data}\n\n`);
+    console.log(`${JSON.stringify(data)}`);
+    res.write(`${JSON.stringify(data)}`);
   };
 
-  sendData(JSON.stringify({ data: "" }));
+  // FIXME: not sure if this is necessary?
+  sendData({ object: "token", data: "" });
 
   // Create chain
   const chain = makeChain(vectorStore, (token) => {
-    sendData(JSON.stringify({ data: token }));
+    sendData({ object: "token", data: token });
   });
 
   // Ask a question using chat history
   try {
-    await chain.call({
+    const response = await chain.call({
       question: sanitizedQuestion,
       chat_history: history || [],
     });
+
+    // TODO: send an array of sources (pagecontent + metadata) that u can then fix up
+    const sources = response.sourceDocuments.map((doc) => {
+      return {
+        content: doc.pageContent,
+        metadata: doc.metadata,
+      };
+    });
+    sendData({ object: "sources", data: sources });
   } catch (error) {
     console.error("Error: ", error.message);
   } finally {
-    sendData("[DONE]");
+    sendData({ object: "done", data: "[DONE]" });
     res.end();
   }
 }
