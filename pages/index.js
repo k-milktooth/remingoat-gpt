@@ -1,6 +1,7 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo } from "react";
 import { Disclosure } from "@headlessui/react";
 import ReactMarkdown from "react-markdown";
+import { fetchEventSource } from "@microsoft/fetch-event-source";
 
 export default function Home() {
   const [query, setQuery] = useState("");
@@ -8,10 +9,11 @@ export default function Home() {
   const [error, setError] = useState(null);
   const [messageState, setMessageState] = useState({
     messages: [],
+    pending: "",
     history: [],
   });
 
-  const { messages, history } = messageState;
+  const { messages, pending, history } = messageState;
 
   const messageListRef = useRef(null);
   const textAreaRef = useRef(null);
@@ -20,11 +22,9 @@ export default function Home() {
     textAreaRef.current?.focus();
   }, []);
 
-  //handle form submission
+  // Handle form submission
   async function handleSubmit(e) {
     e.preventDefault();
-
-    setError(null);
 
     if (!query) {
       alert("Please input a question");
@@ -42,13 +42,17 @@ export default function Home() {
           message: question,
         },
       ],
+      pending: undefined,
     }));
 
     setLoading(true);
     setQuery("");
+    setMessageState((state) => ({ ...state, pending: "" }));
+
+    const ctrl = new AbortController();
 
     try {
-      const response = await fetch("/api/chat", {
+      fetchEventSource("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -57,40 +61,40 @@ export default function Home() {
           question,
           history,
         }),
+        signal: ctrl.signal,
+        onmessage: (event) => {
+          console.log("event", event);
+          if (event.data === "[DONE]") {
+            setMessageState((state) => ({
+              history: [...state.history, [question, state.pending ?? ""]],
+              messages: [
+                ...state.messages,
+                {
+                  type: "apiMessage",
+                  message: state.pending ?? "",
+                },
+              ],
+              pending: undefined,
+            }));
+            setLoading(false);
+            ctrl.abort();
+          } else {
+            const data = JSON.parse(event.data);
+            console.log("data", data);
+            setMessageState((state) => ({
+              ...state,
+              pending: (state.pending ?? "") + data.data,
+            }));
+          }
+        },
       });
-      const data = await response.json();
-      console.log("data", data);
-
-      if (data.error) {
-        setError(data.error);
-      } else {
-        setMessageState((state) => ({
-          ...state,
-          messages: [
-            ...state.messages,
-            {
-              type: "apiMessage",
-              message: data.response.text,
-              sourceDocs: data.response.sourceDocuments,
-            },
-          ],
-          history: [...state.history, [question, data.text]],
-        }));
-      }
-      console.log("messageState", messageState);
-
-      setLoading(false);
-
-      //scroll to bottom
-      messageListRef.current?.scrollTo(0, messageListRef.current.scrollHeight);
     } catch (error) {
       setLoading(false);
-      setError("An error occurred while fetching the data. Please try again.");
-      console.log("error", error);
+      console.log("Error: ", error);
     }
   }
 
-  //prevent empty submissions
+  // Prevent empty submissions
   const handleEnter = (e) => {
     if (e.key === "Enter" && query) {
       handleSubmit(e);
@@ -98,6 +102,13 @@ export default function Home() {
       e.preventDefault();
     }
   };
+
+  const chatMessages = useMemo(() => {
+    return [
+      ...messages,
+      ...(pending ? [{ type: "apiMessage", message: pending }] : []),
+    ];
+  }, [messages, pending]);
 
   return (
     <>
@@ -108,20 +119,20 @@ export default function Home() {
         <main className="p-24">
           <div>
             <div ref={messageListRef}>
-              {messages.map((message, index) => {
+              {chatMessages.map((message, index) => {
                 let icon;
                 let className;
                 if (message.type === "apiMessage") {
                   className = "bg-gray-100";
                 } else {
                   className =
-                    loading && index === messages.length - 1
+                    loading && index === chatMessages.length - 1
                       ? "bg-red-100 animate-pulse"
                       : "bg-blue-100";
                 }
                 return (
                   <>
-                    <div key={`chatMessage-${index}`} className={className}>
+                    <div key={index} className={className}>
                       {icon}
                       <div>
                         <ReactMarkdown linkTarget="_blank">
