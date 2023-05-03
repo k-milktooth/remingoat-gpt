@@ -1,6 +1,11 @@
 import { OpenAI } from "langchain/llms/openai";
-import { LLMChain, loadQAChain, ChatVectorDBQAChain } from "langchain/chains";
+import {
+  LLMChain,
+  loadQAChain,
+  ConversationalRetrievalQAChain,
+} from "langchain/chains";
 import { PromptTemplate } from "langchain/prompts";
+import { CallbackManager } from "langchain/callbacks";
 
 const CONDENSE_PROMPT =
   PromptTemplate.fromTemplate(`Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question.
@@ -29,18 +34,20 @@ export const makeChain = (vectorstore, onTokenStream) => {
   const docChain = loadQAChain(
     new OpenAI({
       temperature: 0,
-      streaming: Boolean(onTokenStream),
-      callbackManager: {
-        handleNewToken: onTokenStream,
-      },
+      // Stream output
+      streaming: true,
+      // Realtime output
+      callbackManager: CallbackManager.fromHandlers({
+        handleLLMNewToken: (token) => onTokenStream(token),
+      }),
     }),
     {
       prompt: QA_PROMPT,
     }
   );
 
-  const chain = new ChatVectorDBQAChain({
-    vectorstore,
+  const chain = new ConversationalRetrievalQAChain({
+    retriever: vectorstore.asRetriever(),
     combineDocumentsChain: docChain,
     questionGeneratorChain: questionGenerator,
     returnSourceDocuments: true,
