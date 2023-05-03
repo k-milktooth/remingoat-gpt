@@ -21,31 +21,46 @@ export default async function handler(req, res) {
   // OpenAI recommends replacing newlines with spaces for best results
   const sanitizedQuestion = question.trim().replaceAll("\n", " ");
 
+  const pineconeIndex = pinecone.Index(`${process.env.PINECONE_INDEX}`);
+
+  // Create vectorstore
+  const vectorStore = await PineconeStore.fromExistingIndex(
+    new OpenAIEmbeddings(),
+    {
+      pineconeIndex,
+    }
+  );
+
+  res.writeHead(200, {
+    "Content-Type": "text/event-stream",
+    // Important to set no-transform to avoid compression, which will delay
+    // writing response chunks to the client.
+    // See https://github.com/vercel/next.js/issues/9965
+    "Cache-Control": "no-cache, no-transform",
+    Connection: "keep-alive",
+  });
+
+  const sendData = (data) => {
+    res.write(`data: ${data}\n\n`);
+  };
+
+  sendData(JSON.stringify({ data: "" }));
+
+  // Create chain
+  const chain = makeChain(vectorStore, (token) => {
+    sendData(JSON.stringify({ data: token }));
+  });
+
+  // Ask a question using chat history
   try {
-    const pineconeIndex = pinecone.Index(`${process.env.PINECONE_INDEX}`);
-
-    // Create vectorstore
-    const vectorStore = await PineconeStore.fromExistingIndex(
-      new OpenAIEmbeddings(),
-      {
-        pineconeIndex,
-      }
-    );
-
-    // Create chain
-    const chain = makeChain(vectorStore, (token) => {
-      sendData(JSON.stringify({ data: token }));
-    });
-
-    // Ask a question using chat history
-    const response = await chain.call({
+    await chain.call({
       question: sanitizedQuestion,
       chat_history: history || [],
     });
-
-    res.status(200).json({ response });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message || "Something went wrong" });
+    console.log("error", error);
+  } finally {
+    sendData("[DONE]");
+    res.end();
   }
 }
