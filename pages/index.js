@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from "react";
+import { Disclosure } from "@headlessui/react";
 import ReactMarkdown from "react-markdown";
 
 export default function Home() {
@@ -110,6 +111,14 @@ export default function Home() {
               {messages.map((message, index) => {
                 let icon;
                 let className;
+                if (message.type === "apiMessage") {
+                  className = "bg-gray-100";
+                } else {
+                  className =
+                    loading && index === messages.length - 1
+                      ? "bg-red-100 animate-pulse"
+                      : "bg-blue-100";
+                }
                 return (
                   <>
                     <div key={`chatMessage-${index}`} className={className}>
@@ -121,19 +130,28 @@ export default function Home() {
                       </div>
                     </div>
                     {message.sourceDocs && (
-                      <div className="p-5" key={`sourceDocsAccordion-${index}`}>
+                      <>
                         {message.sourceDocs.map((doc, index) => (
                           <div key={`messageSourceDocs-${index}`}>
-                            <h3>Source {index + 1}</h3>
-                            <ReactMarkdown linkTarget="_blank">
-                              {doc.pageContent}
-                            </ReactMarkdown>
-                            <p className="mt-2">
-                              <b>Source:</b> {doc.metadata.source}
-                            </p>
+                            <Disclosure>
+                              <Disclosure.Button>
+                                <h3>Source {index + 1}</h3>
+                              </Disclosure.Button>
+                              <Disclosure.Panel>
+                                <ReactMarkdown linkTarget="_blank">
+                                  {doc.pageContent}
+                                </ReactMarkdown>
+                                <p className="mt-2">
+                                  <span>Source:</span>{" "}
+                                  <a target="_blank" href={doc.metadata.source}>
+                                    {doc.metadata.source}
+                                  </a>
+                                </p>
+                              </Disclosure.Panel>
+                            </Disclosure>
                           </div>
                         ))}
-                      </div>
+                      </>
                     )}
                   </>
                 );
