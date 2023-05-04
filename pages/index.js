@@ -4,6 +4,7 @@ import ReactMarkdown from "react-markdown";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import { end, message, sourceDocuments } from "@/utils/object-identifiers";
 import { ChevronUpIcon } from "@heroicons/react/20/solid";
+import { NextSeo } from "next-seo";
 
 export default function Home() {
   const [query, setQuery] = useState("");
@@ -134,6 +135,10 @@ export default function Home() {
 
   return (
     <>
+      <NextSeo
+        title="RemingoatGPT"
+        description="RemingoatGPT is a GPT-3 powered chatbot that answers questions about mechanical keyboard switches"
+      />
       <div className="mx-auto gap-4">
         <h1 className="mt-12 text-2xl font-bold leading-[1.1] tracking-tighter text-center">
           RemingoatGPT
