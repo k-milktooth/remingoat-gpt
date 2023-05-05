@@ -144,68 +144,79 @@ export default function Home() {
           RemingoatGPT
         </h1>
         <main className="">
-          <div ref={messageListRef}>
-            {chatMessages.map((message, index) => {
-              let className;
-              if (message.type === "apiMessage") {
-                className = "bg-gray-100";
-              } else {
-                className =
-                  loading && index === chatMessages.length - 1
-                    ? "bg-red-100 animate-pulse"
-                    : "bg-blue-100";
-              }
+          <div className="">
+            <div
+              ref={messageListRef}
+              className="h-[80vh] bg-emerald-100 overflow-y-scroll"
+            >
+              {chatMessages.map((message, index) => {
+                let className;
+                if (message.type === "apiMessage") {
+                  className = "bg-gray-100";
+                } else {
+                  className =
+                    loading && index === chatMessages.length - 1
+                      ? "bg-red-100 animate-pulse"
+                      : "bg-blue-100";
+                }
 
-              return (
-                <div key={index} className={className}>
-                  <ReactMarkdown linkTarget="_blank">
-                    {message.message}
-                  </ReactMarkdown>
-                  {message.sourceDocs && (
-                    <Disclosure>
-                      {({ open }) => (
-                        <>
-                          <Disclosure.Button className="bg-purple-100 grid grid-cols-2 w-full px-2 py-1">
-                            <h3 className="justify-self-start">Sources</h3>
-                            <ChevronUpIcon
-                              className={`${
-                                open ? "rotate-180 transform" : ""
-                              } h-5 w-5 justify-self-end`}
-                            />
-                          </Disclosure.Button>
-                          <Disclosure.Panel>
-                            {message.sourceDocs.map((doc, sourceDocIndex) => (
-                              <div key={`messageSourceDocs-${sourceDocIndex}`}>
-                                <Disclosure>
-                                  <Disclosure.Button>
-                                    <h4>Source {sourceDocIndex + 1}</h4>
-                                  </Disclosure.Button>
-                                  <Disclosure.Panel>
-                                    <ReactMarkdown linkTarget="_blank">
-                                      {doc.pageContent}
-                                    </ReactMarkdown>
-                                    <p className="mt-2">
-                                      <a
-                                        target="_blank"
-                                        href={doc.metadata.source}
+                return (
+                  <div key={index}>
+                    <ReactMarkdown
+                      className="prose bg-white"
+                      linkTarget="_blank"
+                    >
+                      {message.message}
+                    </ReactMarkdown>
+                    {message.sourceDocs && (
+                      <Disclosure>
+                        {({ open }) => (
+                          <>
+                            <Disclosure.Button className="bg-purple-100 grid grid-cols-2 w-full px-2 py-1">
+                              <h3 className="justify-self-start">Sources</h3>
+                              <ChevronUpIcon
+                                className={`${
+                                  open ? "rotate-180 transform" : ""
+                                } h-5 w-5 justify-self-end`}
+                              />
+                            </Disclosure.Button>
+                            <Disclosure.Panel>
+                              {message.sourceDocs.map((doc, sourceDocIndex) => (
+                                <div
+                                  key={`messageSourceDocs-${sourceDocIndex}`}
+                                >
+                                  <Disclosure>
+                                    <Disclosure.Button>
+                                      <h4>Source {sourceDocIndex + 1}</h4>
+                                    </Disclosure.Button>
+                                    <Disclosure.Panel>
+                                      <ReactMarkdown
+                                        className="prose"
+                                        linkTarget="_blank"
                                       >
-                                        {doc.metadata.source}
-                                      </a>
-                                    </p>
-                                  </Disclosure.Panel>
-                                </Disclosure>
-                              </div>
-                            ))}
-                          </Disclosure.Panel>
-                        </>
-                      )}
-                    </Disclosure>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-          <div>
+                                        {doc.pageContent}
+                                      </ReactMarkdown>
+                                      <p className="mt-2">
+                                        <a
+                                          target="_blank"
+                                          href={doc.metadata.source}
+                                        >
+                                          {doc.metadata.source}
+                                        </a>
+                                      </p>
+                                    </Disclosure.Panel>
+                                  </Disclosure>
+                                </div>
+                              ))}
+                            </Disclosure.Panel>
+                          </>
+                        )}
+                      </Disclosure>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
             <div>
               <form onSubmit={handleSubmit}>
                 <textarea
@@ -239,12 +250,12 @@ export default function Home() {
                 </button>
               </form>
             </div>
+            {error && (
+              <div className="border border-red-400 rounded-md p-4">
+                <p className="text-red-500">{error}</p>
+              </div>
+            )}
           </div>
-          {error && (
-            <div className="border border-red-400 rounded-md p-4">
-              <p className="text-red-500">{error}</p>
-            </div>
-          )}
         </main>
       </div>
       <footer className="m-auto p-4">Powered by LangChainAI.</footer>
