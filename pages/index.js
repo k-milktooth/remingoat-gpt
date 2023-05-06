@@ -3,7 +3,7 @@ import { Disclosure } from "@headlessui/react";
 import ReactMarkdown from "react-markdown";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import { end, message, sourceDocuments } from "@/utils/object-identifiers";
-import { ChevronUpIcon } from "@heroicons/react/20/solid";
+import { ChevronUpIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { NextSeo } from "next-seo";
 import { twMerge } from "tailwind-merge";
 import TextareaAutosize from "react-textarea-autosize";
@@ -181,7 +181,9 @@ export default function Home() {
                           >
                             <Disclosure>
                               <Disclosure.Button>
-                                <h4>Source {sourceDocIndex + 1}</h4>
+                                <h4 className="font-semibold text-sm opacity-50">
+                                  Source {sourceDocIndex + 1}
+                                </h4>
                               </Disclosure.Button>
                               <Disclosure.Panel className="mt-2 p-4 bg-[#262626]">
                                 <ReactMarkdown
@@ -211,9 +213,12 @@ export default function Home() {
             </div>
           </div>
           <div className="mt-4 w-full py-2 flex-grow md:py-3 md:pl-4 relative bg-[#333333] dark:shadow-[0_0_15px_rgba(0,0,0,0.10)]">
-            <form onSubmit={handleSubmit}>
+            <form
+              className="grid grid-cols-5 lg:grid-cols-10"
+              onSubmit={handleSubmit}
+            >
               <TextareaAutosize
-                className="m-0 w-full resize-none bg-transparent p-0 pr-7 focus:outline-none dark:bg-transparent pl-2 md:pl-0"
+                className="m-0 w-full resize-none bg-transparent p-0 pr-7 focus:outline-none dark:bg-transparent pl-2 md:pl-0 col-span-4 lg:col-span-9"
                 disabled={loading}
                 onKeyDown={handleEnter}
                 ref={textAreaRef}
@@ -230,7 +235,11 @@ export default function Home() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />
-              <button type="submit" disabled={loading}>
+              <button
+                type="submit"
+                className="justify-self-end pr-2 col-span-1"
+                disabled={loading}
+              >
                 {loading ? (
                   <svg
                     class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
@@ -253,10 +262,7 @@ export default function Home() {
                     ></path>
                   </svg>
                 ) : (
-                  // Send icon SVG in input field
-                  <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
-                  </svg>
+                  <PaperAirplaneIcon className="hover:bg-[#262626] h-5 w-5 text-white justify-self-end inline-block" />
                 )}
               </button>
             </form>
