@@ -31,6 +31,7 @@ async function getUrlsFromSitemap() {
   return urls;
 }
 
+// Fetch and clean essay contents
 async function getEssay(essayUrl) {
   console.log(`Fetching ${essayUrl}`);
   const html = await axios.get(essayUrl);
@@ -68,21 +69,20 @@ async function splitDocsIntoChunks(docs) {
   return await textSplitter.splitDocuments(docs);
 }
 
+// Create and store embeddings
 async function embedDocuments(docs) {
-  // Create and store embeddings
-  const embeddings = new OpenAIEmbeddings();
-
-  // Initialize the Pinecone client
   if (
     !process.env.PINECONE_API_KEY ||
     !process.env.PINECONE_ENVIRONMENT ||
-    !process.env.PINECONE_INDEX
+    !process.env.PINECONE_INDEX ||
+    !process.env.PINECONE_NAMESPACE
   ) {
     throw new Error(
-      "PINECONE_ENVIRONMENT and PINECONE_API_KEY and PINECONE_INDEX must be set"
+      "PINECONE_ENVIRONMENT and PINECONE_API_KEY and PINECONE_INDEX and PINECONE_NAMESPACE must be set"
     );
   }
 
+  // Initialize the Pinecone client
   const pineconeClient = new PineconeClient();
   await pineconeClient.init({
     apiKey: process.env.PINECONE_API_KEY,
@@ -90,8 +90,23 @@ async function embedDocuments(docs) {
   });
   const pineconeIndex = pineconeClient.Index(process.env.PINECONE_INDEX);
 
+  // Initialize embedding integration
+  const embeddings = new OpenAIEmbeddings();
+
+  /**
+   * Delete existing embeddings; we'll re-create them
+   * This is useful for re-running the script and staying up-to-date
+   */
+  await pineconeIndex.delete1({
+    deleteAll: true,
+    namespace: process.env.PINECONE_NAMESPACE,
+  });
+
+  // Embed the documents into vectorstore
+  console.log("Embedding documents...");
   await PineconeStore.fromDocuments(docs, embeddings, {
     pineconeIndex,
+    namespace: process.env.PINECONE_NAMESPACE,
   });
 }
 
@@ -112,15 +127,15 @@ async function embedDocuments(docs) {
 
     console.log("Data extracted from URLs");
 
-    // This is mainly for checking work
+    // Write to intermediate JSON file for checking work
     const json = JSON.stringify(rawDocs);
     fs.writeFileSync(JSON_FILENAME, json);
     console.log(`Data written to ${JSON_FILENAME}`);
 
-    // Split docs into chunks for OpenAI context window
+    // Split docs into chunks so they fit in OpenAI context window
     const docs = await splitDocsIntoChunks(rawDocs);
 
-    // Embed docs into Pinecone
+    // Embed docs into vectorstore
     await embedDocuments(docs);
   } catch (error) {
     console.error("Error occured:", error);
