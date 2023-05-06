@@ -8,7 +8,7 @@ It's no surprise that [theRemingoat switch reviews](https://www.theremingoat.com
 
 <img width="1174" alt="Time to read theRemingoat switch review" src="https://user-images.githubusercontent.com/132307192/235802744-ffb59b02-111d-4f05-931a-c9403dd4fdf5.png">
 
-The obvious alternative is to not read the reviews and simply browse the provided score sheets. This shortcut is more time-efficient but ultimately lacks nuance. 
+The obvious alternative is to not read the reviews and simply browse the provided score sheets. This shortcut is more time-efficient but ultimately lacks nuance.
 
 <img width="748" alt="theRemingoat score sheet" src="https://user-images.githubusercontent.com/132307192/235802784-a81d0e18-03db-400d-b1fc-498b42b7e015.png">
 
@@ -38,6 +38,7 @@ npm i
 - Fill in API keys
   - Visit [OpenAI](https://help.openai.com/en/articles/4936850-where-do-i-find-my-secret-api-key) to retrieve your OpenAI API key.
   - Visit [Pinecone](https://pinecone.io/) to create an index. Then, from the dashboard, retrieve the appropriate Pinecone API key, environment and index name.
+    - We've prefilled in the Pinecone namespace environment variable (`PINECONE_NAMESPACE="remingoat-gpt"`) but feel free to change that to your liking.
 
 4. Ingest data
 
