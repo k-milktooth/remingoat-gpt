@@ -13,6 +13,13 @@ import Image from "next/image";
 const API_MESSAGE = "apiMessage";
 const USER_MESSAGE = "userMessage";
 
+// Examples to show on page load
+const introPromptQuestions = [
+  "Sound signature of the Jwick Semi-Silents?",
+  "What's the difference between thock and clack?",
+  "How is the stem wobble on the Gateron CJs?",
+];
+
 export default function Home() {
   const [showIntroPrompt, setShowIntroPrompt] = useState(true);
   const [query, setQuery] = useState("");
@@ -143,6 +150,10 @@ export default function Home() {
     ];
   }, [messages, pending]);
 
+  const fillTextbox = (text) => {
+    setQuery(text);
+  };
+
   return (
     <>
       <NextSeo
@@ -160,12 +171,34 @@ export default function Home() {
               className="h-[80vh] overflow-y-scroll border border-[#333333]"
             >
               {showIntroPrompt && (
-                <div className="bg-[#333333] py-4">
-                  <div className="grid gap-2 mx-4">
+                <div className="bg-[#333333] py-4 lg:text-center">
+                  <div className="grid gap-4 lg:gap-2 mx-4">
                     <p className="">
-                      I'm RemingoatGPT, your creative and helpful collaborator.
+                      I'm RemingoatGPT, your friendly chatbot in helping you
+                      query insights from{" "}
+                      <a
+                        href="https://www.theremingoat.com/"
+                        target="_blank"
+                        className="underline decoration-emerald-500 decoration-2 underline-offset-4"
+                      >
+                        theRemingoat switch reviews
+                      </a>
+                      .
                     </p>
                     <p>Not sure where to start? Try one of these prompts:</p>
+                    <div className="grid gap-2 mt-2">
+                      {introPromptQuestions.map((question) => (
+                        <div key={question}>
+                          <button
+                            type="button"
+                            onClick={() => fillTextbox(question)}
+                            className="p-1 underline decoration-yellow-500 decoration-2 underline-offset-4 hover:bg-[#262626]"
+                          >
+                            "{question}"→
+                          </button>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               )}
