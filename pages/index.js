@@ -271,7 +271,7 @@ export default function Home() {
                                     <a
                                       target="_blank"
                                       href={doc.metadata.source}
-                                      className="underline decoration-emerald-500 decoration-2 underline-offset-4"
+                                      className="text-sm underline decoration-emerald-500 decoration-2 underline-offset-4"
                                     >
                                       {doc.metadata.source}
                                     </a>
