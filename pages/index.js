@@ -3,7 +3,7 @@ import { Disclosure } from "@headlessui/react";
 import ReactMarkdown from "react-markdown";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import { end, message, sourceDocuments } from "@/utils/object-identifiers";
-import { ChevronUpIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
+import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { NextSeo } from "next-seo";
 import { twMerge } from "tailwind-merge";
 import TextareaAutosize from "react-textarea-autosize";
