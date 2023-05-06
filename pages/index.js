@@ -157,12 +157,12 @@ export default function Home() {
   return (
     <>
       <NextSeo
-        title="RemingoatGPT"
+        title="RemingoatGPT: AI-powered chatbot for mechanical keyboard switches"
         description="RemingoatGPT is a GPT-3 powered chatbot that answers questions about mechanical keyboard switches"
       />
       <div className="mx-auto gap-4">
         <main className="">
-          <h1 className="text-2xl font-bold leading-[1.1] tracking-tighter text-center sr-only">
+          <h1 className="sr-only text-center text-2xl font-bold leading-[1.1] tracking-tighter">
             RemingoatGPT
           </h1>
           <div className="">
@@ -172,10 +172,10 @@ export default function Home() {
             >
               {showIntroPrompt && (
                 <div className="bg-[#333333] py-4 lg:text-center">
-                  <div className="grid gap-4 lg:gap-2 mx-4">
+                  <div className="mx-4 grid gap-4 lg:gap-2">
                     <p className="">
-                      I'm RemingoatGPT, your friendly chatbot in helping you
-                      query insights from{" "}
+                      I'm RemingoatGPT, your friendly AI-powered chatbot that
+                      helps you query insights from{" "}
                       <a
                         href="https://www.theremingoat.com/"
                         target="_blank"
@@ -186,7 +186,7 @@ export default function Home() {
                       .
                     </p>
                     <p>Not sure where to start? Try one of these prompts:</p>
-                    <div className="grid gap-2 mt-2">
+                    <div className="mt-2 grid gap-2">
                       {introPromptQuestions.map((question) => (
                         <div key={question}>
                           <button
@@ -238,7 +238,7 @@ export default function Home() {
                         className="col-span-1 mx-4 mb-2 lg:mx-0 lg:mb-0 lg:justify-self-end"
                       />
                       <ReactMarkdown
-                        className="prose prose-invert max-w-none mx-4 lg:mx-12 lg:col-span-11"
+                        className="prose prose-invert mx-4 max-w-none lg:col-span-11 lg:mx-12"
                         linkTarget="_blank"
                       >
                         {message.message}
@@ -252,17 +252,17 @@ export default function Home() {
                           {message.sourceDocs.map((doc, sourceDocIndex) => (
                             <div
                               key={`messageSourceDocs-${sourceDocIndex}`}
-                              className="lg:px-12 py-2"
+                              className="py-2 lg:px-12"
                             >
                               <Disclosure>
                                 <Disclosure.Button>
-                                  <h4 className="font-semibold text-sm opacity-50">
+                                  <h4 className="text-sm font-semibold opacity-50">
                                     Source {sourceDocIndex + 1}
                                   </h4>
                                 </Disclosure.Button>
-                                <Disclosure.Panel className="mt-2 p-4 bg-[#262626]">
+                                <Disclosure.Panel className="mt-2 bg-[#262626] p-4">
                                   <ReactMarkdown
-                                    className="prose prose-sm max-w-none prose-invert"
+                                    className="prose prose-sm prose-invert max-w-none"
                                     linkTarget="_blank"
                                   >
                                     {doc.pageContent}
@@ -288,13 +288,13 @@ export default function Home() {
               })}
             </div>
           </div>
-          <div className="mt-4 w-full py-2 flex-grow md:py-3 md:pl-4 relative bg-[#333333] dark:shadow-[0_0_15px_rgba(0,0,0,0.10)]">
+          <div className="relative mt-4 w-full flex-grow bg-[#333333] py-2 dark:shadow-[0_0_15px_rgba(0,0,0,0.10)] md:py-3 md:pl-4">
             <form
               className="grid grid-cols-5 lg:grid-cols-10"
               onSubmit={handleSubmit}
             >
               <TextareaAutosize
-                className="m-0 w-full resize-none bg-transparent p-0 pr-7 focus:outline-none dark:bg-transparent pl-2 md:pl-0 col-span-4 lg:col-span-9"
+                className="col-span-4 m-0 w-full resize-none bg-transparent p-0 pl-2 pr-7 focus:outline-none dark:bg-transparent md:pl-0 lg:col-span-9"
                 disabled={loading}
                 onKeyDown={handleEnter}
                 ref={textAreaRef}
@@ -313,12 +313,12 @@ export default function Home() {
               />
               <button
                 type="submit"
-                className="justify-self-end pr-2 col-span-1"
+                className="col-span-1 justify-self-end pr-2"
                 disabled={loading}
               >
                 {loading ? (
                   <svg
-                    class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    class="-ml-1 mr-3 h-5 w-5 animate-spin text-white"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -338,7 +338,7 @@ export default function Home() {
                     ></path>
                   </svg>
                 ) : (
-                  <PaperAirplaneIcon className="hover:bg-[#262626] h-5 w-5 text-white justify-self-end inline-block" />
+                  <PaperAirplaneIcon className="inline-block h-5 w-5 justify-self-end text-white hover:bg-[#262626]" />
                 )}
               </button>
             </form>
