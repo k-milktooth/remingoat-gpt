@@ -5,6 +5,18 @@ import { pinecone } from "@/utils/pinecone-client";
 import { end, message, sourceDocuments } from "@/utils/object-identifiers";
 
 export default async function handler(req, res) {
+  if (
+    !process.env.PINECONE_API_KEY ||
+    !process.env.PINECONE_ENVIRONMENT ||
+    !process.env.PINECONE_INDEX ||
+    !process.env.PINECONE_NAMESPACE
+  ) {
+    res.status(500).json({
+      error: "Pinecone environment variables not set",
+    });
+    return;
+  }
+
   const { question, history } = req.body;
 
   // Only accept post requests
@@ -28,6 +40,7 @@ export default async function handler(req, res) {
     new OpenAIEmbeddings(),
     {
       pineconeIndex,
+      namespace: process.env.PINECONE_NAMESPACE,
     }
   );
 
@@ -47,8 +60,8 @@ export default async function handler(req, res) {
     /**
      * The message is formatted as an SSE event by prefixing it with "data: "
      * and appending two newlines ("\n\n") to indicate the end of the message.
-     * Using two "\n" characters in SSE ensures that
-     * messages are properly separated and received by the client.
+     * Using two "\n" characters in SSE ensures that messages are properly
+     * separated and received by the client.
      */
     res.write(`data: ${JSON.stringify(data)}\n\n`);
   };
