@@ -5,6 +5,8 @@ import { fetchEventSource } from "@microsoft/fetch-event-source";
 import { end, message, sourceDocuments } from "@/utils/object-identifiers";
 import { ChevronUpIcon } from "@heroicons/react/20/solid";
 import { NextSeo } from "next-seo";
+import { twMerge } from "tailwind-merge";
+import TextareaAutosize from "react-textarea-autosize";
 
 export default function Home() {
   const [query, setQuery] = useState("");
@@ -140,125 +142,132 @@ export default function Home() {
         description="RemingoatGPT is a GPT-3 powered chatbot that answers questions about mechanical keyboard switches"
       />
       <div className="mx-auto gap-4">
-        <h1 className="mt-12 text-2xl font-bold leading-[1.1] tracking-tighter text-center">
-          RemingoatGPT
-        </h1>
         <main className="">
+          <h1 className="text-2xl font-bold leading-[1.1] tracking-tighter text-center sr-only">
+            RemingoatGPT
+          </h1>
           <div className="">
             <div
               ref={messageListRef}
-              className="h-[80vh] bg-emerald-100 overflow-y-scroll"
+              className="h-[80vh] overflow-y-scroll border border-gray-500"
             >
               {chatMessages.map((message, index) => {
                 let className;
                 if (message.type === "apiMessage") {
-                  className = "bg-gray-100";
+                  className = "bg-[#333333]";
                 } else {
                   className =
                     loading && index === chatMessages.length - 1
-                      ? "bg-red-100 animate-pulse"
-                      : "bg-blue-100";
+                      ? "bg-black animate-pulse"
+                      : "bg-[#222222]";
                 }
 
+                className = twMerge("py-4 grid", className);
+
                 return (
-                  <div key={index}>
+                  <div key={index} className={className}>
                     <ReactMarkdown
-                      className="prose bg-white"
+                      className="prose prose-invert max-w-none mx-4 lg:mx-12 "
                       linkTarget="_blank"
                     >
                       {message.message}
                     </ReactMarkdown>
                     {message.sourceDocs && (
-                      <Disclosure>
-                        {({ open }) => (
-                          <>
-                            <Disclosure.Button className="bg-purple-100 grid grid-cols-2 w-full px-2 py-1">
-                              <h3 className="justify-self-start">Sources</h3>
-                              <ChevronUpIcon
-                                className={`${
-                                  open ? "rotate-180 transform" : ""
-                                } h-5 w-5 justify-self-end`}
-                              />
-                            </Disclosure.Button>
-                            <Disclosure.Panel>
-                              {message.sourceDocs.map((doc, sourceDocIndex) => (
-                                <div
-                                  key={`messageSourceDocs-${sourceDocIndex}`}
+                      <div>
+                        {message.sourceDocs.map((doc, sourceDocIndex) => (
+                          <div
+                            key={`messageSourceDocs-${sourceDocIndex}`}
+                            className="mx-4 lg:px-12 py-2"
+                          >
+                            <Disclosure>
+                              <Disclosure.Button>
+                                <h4>Source {sourceDocIndex + 1}</h4>
+                              </Disclosure.Button>
+                              <Disclosure.Panel className="mt-2 p-4 bg-[#262626]">
+                                <ReactMarkdown
+                                  className="prose prose-sm max-w-none prose-invert"
+                                  linkTarget="_blank"
                                 >
-                                  <Disclosure>
-                                    <Disclosure.Button>
-                                      <h4>Source {sourceDocIndex + 1}</h4>
-                                    </Disclosure.Button>
-                                    <Disclosure.Panel>
-                                      <ReactMarkdown
-                                        className="prose"
-                                        linkTarget="_blank"
-                                      >
-                                        {doc.pageContent}
-                                      </ReactMarkdown>
-                                      <p className="mt-2">
-                                        <a
-                                          target="_blank"
-                                          href={doc.metadata.source}
-                                        >
-                                          {doc.metadata.source}
-                                        </a>
-                                      </p>
-                                    </Disclosure.Panel>
-                                  </Disclosure>
-                                </div>
-                              ))}
-                            </Disclosure.Panel>
-                          </>
-                        )}
-                      </Disclosure>
+                                  {doc.pageContent}
+                                </ReactMarkdown>
+                                <p className="mt-2">
+                                  <a
+                                    target="_blank"
+                                    href={doc.metadata.source}
+                                    className="underline decoration-emerald-500 decoration-2 underline-offset-4"
+                                  >
+                                    {doc.metadata.source}
+                                  </a>
+                                </p>
+                              </Disclosure.Panel>
+                            </Disclosure>
+                          </div>
+                        ))}
+                      </div>
                     )}
                   </div>
                 );
               })}
             </div>
-            <div>
-              <form onSubmit={handleSubmit}>
-                <textarea
-                  disabled={loading}
-                  onKeyDown={handleEnter}
-                  ref={textAreaRef}
-                  autoFocus={false}
-                  rows={1}
-                  maxLength={512}
-                  id="userInput"
-                  name="userInput"
-                  placeholder={
-                    loading
-                      ? "Waiting for response..."
-                      : "Ask a question about switches."
-                  }
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                />
-                <button type="submit" disabled={loading}>
-                  {loading ? (
-                    <div>
-                      <p>Loading...</p>
-                    </div>
-                  ) : (
-                    // Send icon SVG in input field
-                    <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
-                    </svg>
-                  )}
-                </button>
-              </form>
-            </div>
-            {error && (
-              <div className="border border-red-400 rounded-md p-4">
-                <p className="text-red-500">{error}</p>
-              </div>
-            )}
           </div>
+          <div className="mt-4 w-full py-2 flex-grow md:py-3 md:pl-4 relative bg-[#333333] dark:shadow-[0_0_15px_rgba(0,0,0,0.10)]">
+            <form onSubmit={handleSubmit}>
+              <TextareaAutosize
+                className="m-0 w-full resize-none bg-transparent p-0 pr-7 focus:outline-none dark:bg-transparent pl-2 md:pl-0"
+                disabled={loading}
+                onKeyDown={handleEnter}
+                ref={textAreaRef}
+                autoFocus={false}
+                rows={1}
+                maxLength={512}
+                id="userInput"
+                name="userInput"
+                placeholder={
+                  loading
+                    ? "Waiting for response..."
+                    : "Ask a question about switches."
+                }
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+              <button type="submit" disabled={loading}>
+                {loading ? (
+                  <svg
+                    class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      class="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      stroke-width="4"
+                    ></circle>
+                    <path
+                      class="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                ) : (
+                  // Send icon SVG in input field
+                  <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+                  </svg>
+                )}
+              </button>
+            </form>
+          </div>
+          {error && (
+            <div className="border border-red-400 p-4">
+              <p className="text-red-500">{error}</p>
+            </div>
+          )}
         </main>
       </div>
-      <footer className="m-auto p-4">Powered by LangChainAI.</footer>
     </>
   );
 }
