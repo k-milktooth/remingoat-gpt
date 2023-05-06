@@ -7,6 +7,11 @@ import { ChevronUpIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { NextSeo } from "next-seo";
 import { twMerge } from "tailwind-merge";
 import TextareaAutosize from "react-textarea-autosize";
+import Image from "next/image";
+
+// String representing type of message in chat session
+const API_MESSAGE = "apiMessage";
+const USER_MESSAGE = "userMessage";
 
 export default function Home() {
   const [query, setQuery] = useState("");
@@ -44,7 +49,7 @@ export default function Home() {
       messages: [
         ...state.messages,
         {
-          type: "userMessage",
+          type: USER_MESSAGE,
           message: question,
         },
       ],
@@ -78,7 +83,7 @@ export default function Home() {
                 messages: [
                   ...state.messages,
                   {
-                    type: "apiMessage",
+                    type: API_MESSAGE,
                     message: state.pending ?? "",
                     sourceDocs: state.pendingSourceDocs,
                   },
@@ -131,7 +136,7 @@ export default function Home() {
   const chatMessages = useMemo(() => {
     return [
       ...messages,
-      ...(pending ? [{ type: "apiMessage", message: pending }] : []),
+      ...(pending ? [{ type: API_MESSAGE, message: pending }] : []),
     ];
   }, [messages, pending]);
 
@@ -149,64 +154,89 @@ export default function Home() {
           <div className="">
             <div
               ref={messageListRef}
-              className="h-[80vh] overflow-y-scroll border border-gray-500"
+              className="h-[80vh] overflow-y-scroll border border-[#333333]"
             >
               {chatMessages.map((message, index) => {
                 let className;
-                if (message.type === "apiMessage") {
+                let profilePic;
+                let profilePicAlt;
+
+                // Message from the bot
+                if (message.type === API_MESSAGE) {
                   className = "bg-[#333333]";
-                } else {
+                  profilePic =
+                    "https://user-images.githubusercontent.com/132307192/236642626-f7ada1b2-e52c-4c90-954b-029591dc8436.jpg";
+                  profilePicAlt = "Robogoat";
+                }
+                // Message from the user
+                else if (message.type === USER_MESSAGE) {
                   className =
                     loading && index === chatMessages.length - 1
                       ? "bg-black animate-pulse"
                       : "bg-[#222222]";
+                  profilePic =
+                    "https://user-images.githubusercontent.com/132307192/236644162-1160d629-aba2-4b84-988b-7aae70d06d0b.jpg";
+                  profilePicAlt = "You";
                 }
 
                 className = twMerge("py-4 grid", className);
 
                 return (
                   <div key={index} className={className}>
-                    <ReactMarkdown
-                      className="prose prose-invert max-w-none mx-4 lg:mx-12 "
-                      linkTarget="_blank"
-                    >
-                      {message.message}
-                    </ReactMarkdown>
-                    {message.sourceDocs && (
-                      <div>
-                        {message.sourceDocs.map((doc, sourceDocIndex) => (
-                          <div
-                            key={`messageSourceDocs-${sourceDocIndex}`}
-                            className="mx-4 lg:px-12 py-2"
-                          >
-                            <Disclosure>
-                              <Disclosure.Button>
-                                <h4 className="font-semibold text-sm opacity-50">
-                                  Source {sourceDocIndex + 1}
-                                </h4>
-                              </Disclosure.Button>
-                              <Disclosure.Panel className="mt-2 p-4 bg-[#262626]">
-                                <ReactMarkdown
-                                  className="prose prose-sm max-w-none prose-invert"
-                                  linkTarget="_blank"
-                                >
-                                  {doc.pageContent}
-                                </ReactMarkdown>
-                                <p className="mt-2">
-                                  <a
-                                    target="_blank"
-                                    href={doc.metadata.source}
-                                    className="underline decoration-emerald-500 decoration-2 underline-offset-4"
+                    <div className="grid lg:grid-cols-12">
+                      <Image
+                        src={profilePic}
+                        alt={profilePicAlt}
+                        width={35}
+                        height={35}
+                        className="col-span-1 mx-4 mb-2 lg:mx-0 lg:mb-0 lg:justify-self-end"
+                      />
+                      <ReactMarkdown
+                        className="prose prose-invert max-w-none mx-4 lg:mx-12 lg:col-span-11"
+                        linkTarget="_blank"
+                      >
+                        {message.message}
+                      </ReactMarkdown>
+                    </div>
+                    <div></div>
+                    <div className="mt-2 grid lg:grid-cols-12">
+                      <div></div>
+                      {message.sourceDocs && (
+                        <div className="mx-4 lg:col-span-11">
+                          {message.sourceDocs.map((doc, sourceDocIndex) => (
+                            <div
+                              key={`messageSourceDocs-${sourceDocIndex}`}
+                              className="lg:px-12 py-2"
+                            >
+                              <Disclosure>
+                                <Disclosure.Button>
+                                  <h4 className="font-semibold text-sm opacity-50">
+                                    Source {sourceDocIndex + 1}
+                                  </h4>
+                                </Disclosure.Button>
+                                <Disclosure.Panel className="mt-2 p-4 bg-[#262626]">
+                                  <ReactMarkdown
+                                    className="prose prose-sm max-w-none prose-invert"
+                                    linkTarget="_blank"
                                   >
-                                    {doc.metadata.source}
-                                  </a>
-                                </p>
-                              </Disclosure.Panel>
-                            </Disclosure>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                                    {doc.pageContent}
+                                  </ReactMarkdown>
+                                  <p className="mt-2">
+                                    <a
+                                      target="_blank"
+                                      href={doc.metadata.source}
+                                      className="underline decoration-emerald-500 decoration-2 underline-offset-4"
+                                    >
+                                      {doc.metadata.source}
+                                    </a>
+                                  </p>
+                                </Disclosure.Panel>
+                              </Disclosure>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 );
               })}
