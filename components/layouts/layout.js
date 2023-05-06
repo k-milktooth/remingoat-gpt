@@ -1,16 +1,15 @@
+import Navbar from "@/components/navbar";
+
 export default function Layout({ children }) {
   return (
-    <>
-      {/* <Navbar />
-       */}
+    <div className="bg-neutral-800 text-white lg:px-12 xl:px-20 px-6">
+      <Navbar />
 
-      <main className="mx-auto min-h-screen px-6 pt-4 lg:px-12 xl:px-20 bg-neutral-800 text-white">
-        {children}
-      </main>
+      <main className="mx-auto min-h-screen">{children}</main>
 
       {/*
       <Footer />
       */}
-    </>
+    </div>
   );
 }
