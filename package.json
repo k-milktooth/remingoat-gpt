@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "ingest": "node scripts/ingest.js",
-    "demo-query": "node scripts/demo-query.js"
+    "demo": "node scripts/demo.js"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.14",

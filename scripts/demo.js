@@ -5,7 +5,19 @@ const { PineconeClient } = require("@pinecone-database/pinecone");
 const { OpenAI } = require("langchain/llms/openai");
 require("dotenv").config();
 
+// Test various queries
 async function demoQuery() {
+  if (
+    !process.env.PINECONE_API_KEY ||
+    !process.env.PINECONE_ENVIRONMENT ||
+    !process.env.PINECONE_INDEX ||
+    !process.env.PINECONE_NAMESPACE
+  ) {
+    throw new Error(
+      "PINECONE_ENVIRONMENT and PINECONE_API_KEY and PINECONE_INDEX and PINECONE_NAMESPACE must be set"
+    );
+  }
+
   const pineconeClient = new PineconeClient();
   await pineconeClient.init({
     apiKey: process.env.PINECONE_API_KEY,
@@ -16,12 +28,15 @@ async function demoQuery() {
 
   const vectorStore = await PineconeStore.fromExistingIndex(
     new OpenAIEmbeddings(),
-    { pineconeIndex }
+    {
+      pineconeIndex,
+      namespace: process.env.PINECONE_NAMESPACE,
+    }
   );
 
   const model = new OpenAI();
   const chain = VectorDBQAChain.fromLLM(model, vectorStore, {
-    k: 5,
+    k: 4,
     returnSourceDocuments: true,
   });
 
