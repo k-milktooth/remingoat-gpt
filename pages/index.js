@@ -14,6 +14,7 @@ const API_MESSAGE = "apiMessage";
 const USER_MESSAGE = "userMessage";
 
 export default function Home() {
+  const [showIntroPrompt, setShowIntroPrompt] = useState(true);
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -43,6 +44,8 @@ export default function Home() {
     }
 
     const question = query.trim();
+
+    setShowIntroPrompt(false);
 
     setMessageState((state) => ({
       ...state,
@@ -156,6 +159,16 @@ export default function Home() {
               ref={messageListRef}
               className="h-[80vh] overflow-y-scroll border border-[#333333]"
             >
+              {showIntroPrompt && (
+                <div className="bg-[#333333] py-4">
+                  <div className="grid gap-2 mx-4">
+                    <p className="">
+                      I'm RemingoatGPT, your creative and helpful collaborator.
+                    </p>
+                    <p>Not sure where to start? Try one of these prompts:</p>
+                  </div>
+                </div>
+              )}
               {chatMessages.map((message, index) => {
                 let className;
                 let profilePic;
