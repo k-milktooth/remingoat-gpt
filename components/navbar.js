@@ -90,7 +90,7 @@ export default function Navbar() {
                       </p>
                     </div>
                     <div>
-                      <h4>How can I support theRemingoat?</h4>
+                      <h4>How can I support TheRemingoat?</h4>
                       <p className="text-sm">
                         He has a{" "}
                         <a
@@ -105,9 +105,9 @@ export default function Navbar() {
                     <div>
                       <h4>How much does this site cost to maintain?</h4>
                       <p className="text-sm">
-                        It depends on user traffic: the more it's used the more
-                        OpenAI API costs are incurred. If you've found the site
-                        useful and want to support it, please consider{" "}
+                        It depends on user traffic: the more questions asked the
+                        more OpenAI API costs are incurred. If you've found the
+                        site useful and want to support it, please consider{" "}
                         <a
                           className="underline decoration-emerald-500 decoration-2 underline-offset-4"
                           href="https://donate.stripe.com/fZebME240bbcf0A5kD"
