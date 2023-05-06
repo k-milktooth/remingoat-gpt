@@ -181,7 +181,7 @@ export default function Home() {
                         target="_blank"
                         className="underline decoration-emerald-500 decoration-2 underline-offset-4"
                       >
-                        theRemingoat switch reviews
+                        TheRemingoat switch reviews
                       </a>
                       .
                     </p>

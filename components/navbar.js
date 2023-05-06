@@ -56,7 +56,7 @@ export default function Navbar() {
                         target="_blank"
                         className="underline decoration-emerald-500 decoration-2 underline-offset-4"
                       >
-                        theRemingoat switch reviews
+                        TheRemingoat switch reviews
                       </a>
                       , offering a balance between detail and efficiency to make
                       the switch discovery and research process easier and more

@@ -1,16 +1,16 @@
-# RemingoatGPT - AI-powered chatbot for theRemingoat switch reviews 🐐🤖
+# RemingoatGPT - AI-powered chatbot for TheRemingoat switch reviews 🐐🤖
 
 [https://remingoat-gpt.netlify.app/](https://remingoat-gpt.netlify.app/)
 
 ## Motivation
 
-It's no surprise that [theRemingoat switch reviews](https://www.theremingoat.com/), coming in at thousands of words each, are the most detailed switch reviews available. However, this verbosity has one major downside: it becomes unwieldy to read any given review, not to mention multiple reviews for when you're comparing many switches.
+It's no surprise that [TheRemingoat switch reviews](https://www.theremingoat.com/), coming in at thousands of words each, are the most detailed switch reviews available. However, this verbosity has one major downside: it becomes unwieldy to read any given review, not to mention multiple reviews for when you're comparing many switches.
 
-<img width="1174" alt="Time to read theRemingoat switch review" src="https://user-images.githubusercontent.com/132307192/235802744-ffb59b02-111d-4f05-931a-c9403dd4fdf5.png">
+<img width="1174" alt="Time to read TheRemingoat switch review" src="https://user-images.githubusercontent.com/132307192/235802744-ffb59b02-111d-4f05-931a-c9403dd4fdf5.png">
 
 The obvious alternative is not to read the reviews and simply browse the provided score sheets. This shortcut is more time-efficient but ultimately lacks nuance.
 
-<img width="748" alt="theRemingoat score sheet" src="https://user-images.githubusercontent.com/132307192/235802784-a81d0e18-03db-400d-b1fc-498b42b7e015.png">
+<img width="748" alt="TheRemingoat score sheet" src="https://user-images.githubusercontent.com/132307192/235802784-a81d0e18-03db-400d-b1fc-498b42b7e015.png">
 
 The scores simply reflect theRemingoat's preferences, which you won't be mirroring. In other words, without context, scores are meaningless.
 
