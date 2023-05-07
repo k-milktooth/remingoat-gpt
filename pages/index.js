@@ -159,6 +159,16 @@ export default function Home() {
       <NextSeo
         title="RemingoatGPT: AI-powered chatbot for mechanical keyboard switches"
         description="RemingoatGPT is a GPT-3 powered chatbot that answers questions about mechanical keyboard switches"
+        openGraph={{
+          images: [
+            {
+              url: "https://user-images.githubusercontent.com/132307192/236652223-5bc352e7-e1a3-4a6f-9ee5-fba331b8b11e.png",
+              width: 1200,
+              height: 630,
+              alt: "RemingoatGPT: AI-powered chatbot for mechanical keyboard switches",
+            },
+          ],
+        }}
       />
       <div className="mx-auto gap-4">
         <main className="">
