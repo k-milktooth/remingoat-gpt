@@ -12,7 +12,7 @@ The obvious alternative is not to read the reviews and simply browse the provide
 
 <img width="748" alt="TheRemingoat score sheet" src="https://user-images.githubusercontent.com/132307192/235802784-a81d0e18-03db-400d-b1fc-498b42b7e015.png">
 
-The scores simply reflect theRemingoat's preferences, which you won't be mirroring. In other words, without context, scores are meaningless.
+The scores simply reflect TheRemingoat's preferences, which you won't be mirroring. In other words, without context, scores are meaningless.
 
 RemingoatGPT seeks to mitigate the downsides of **both** long-winded reviews and reductionist score sheets. An AI-powered Q&A chatbot that lets you query detailed data as needed could be the perfect synthesis of detail and efficiency—simply ask and read what's relevant to you.
 
