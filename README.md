@@ -60,3 +60,11 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
   - Current solution streams responses locally but not once deployed in serverless environments such as Vercel or Netlify
   - Might require moving to `/app` dir, see [here](https://github.com/vercel/next.js/issues/9965#issuecomment-1489481795)
 - [ ] Option to bring your own OpenAI API key
+
+## Support
+
+If you've found the site useful, please consider a donation to help cover the cost of OpenAI API calls!
+
+<img width="150" alt="Stripe donate QR code" src="https://user-images.githubusercontent.com/132307192/236652975-2555cc6b-07c3-42f5-b521-772c3a9e7577.png">
+
+Or, [click here](https://donate.stripe.com/fZebME240bbcf0A5kD)
