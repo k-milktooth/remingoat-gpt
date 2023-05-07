@@ -1,6 +1,6 @@
 # RemingoatGPT - AI-powered chatbot for TheRemingoat switch reviews 🐐🤖
 
-[https://remingoat-gpt.netlify.app/](https://remingoat-gpt.netlify.app/)
+[https://remingoat-gpt.vercel.app/](https://remingoat-gpt.vercel.app/)
 
 ## Motivation
 
