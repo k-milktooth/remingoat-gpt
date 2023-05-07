@@ -30,7 +30,7 @@ const projectLinks = [
 
 export default function Footer() {
   return (
-    <footer className="mt-4 grid grid-cols-2 py-4 text-sm font-semibold">
+    <footer className="mt-4 grid grid-cols-2 pb-8 pt-4 text-sm font-semibold">
       <div>
         <div className="grid gap-1">
           {remingoatLinks.map((link) => (
