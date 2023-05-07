@@ -4,6 +4,7 @@ import posthog from "posthog-js";
 import { PostHogProvider } from "posthog-js/react";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { Analytics } from "@vercel/analytics/react";
 
 // Check that PostHog is client-side
 if (typeof window !== "undefined") {
@@ -36,6 +37,7 @@ export default function App({ Component, pageProps }) {
     <PostHogProvider client={posthog}>
       <Layout>
         <Component {...pageProps} />
+        <Analytics />
       </Layout>
     </PostHogProvider>
   );
