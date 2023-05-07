@@ -34,7 +34,12 @@ export default function Footer() {
       <div>
         <div className="grid gap-1">
           {remingoatLinks.map((link) => (
-            <a href={link.url} className="hover:opacity-50" target="_blank">
+            <a
+              key={link.url}
+              href={link.url}
+              className="hover:opacity-50"
+              target="_blank"
+            >
               {link.name} ↗
             </a>
           ))}
@@ -43,7 +48,12 @@ export default function Footer() {
       <div>
         <div className="grid gap-1 justify-self-end text-right">
           {projectLinks.map((link) => (
-            <a href={link.url} className="hover:opacity-50" target="_blank">
+            <a
+              key={link.url}
+              href={link.url}
+              className="hover:opacity-50"
+              target="_blank"
+            >
               {link.name} ↗
             </a>
           ))}
