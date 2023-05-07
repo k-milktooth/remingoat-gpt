@@ -53,3 +53,10 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Roadmap
+
+- [ ] Get streamed responses working in prod
+  - Current solution streams responses locally but not once deployed in serverless environments such as Vercel or Netlify
+  - Might require moving to `/app` dir, see [here](https://github.com/vercel/next.js/issues/9965#issuecomment-1489481795)
+- [ ] Option to bring your own OpenAI API key
