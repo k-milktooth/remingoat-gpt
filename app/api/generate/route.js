@@ -32,16 +32,7 @@ related to the context.
 Question: {question}
 Helpful answer in markdown:`);
 
-// Write helper function that returns ConversationalRetrievalQAChain
-const createConversationalRetrievalQAChain = async () => {
-  new ConversationalRetrievalQAChain({
-    retriever: vectorStore.asRetriever(),
-    combineDocumentsChain: docChain,
-    questionGeneratorChain: questionGenerator,
-    returnSourceDocuments: true,
-    k: 4, // Number of source documents to return
-  });
-};
+export const runtime = "edge";
 
 export async function POST(req) {
   try {
@@ -81,7 +72,6 @@ export async function POST(req) {
       const encoder = new TextEncoder();
       const stream = new TransformStream();
       const writer = stream.writable.getWriter();
-      console.log("creating llm");
 
       console.log("creating loadQAChain");
 
