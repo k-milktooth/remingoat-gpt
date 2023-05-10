@@ -15,6 +15,7 @@
     "@heroicons/react": "^2.0.17",
     "@microsoft/fetch-event-source": "^2.0.1",
     "@pinecone-database/pinecone": "^0.0.14",
+    "@supabase/supabase-js": "^2.21.0",
     "@vercel/analytics": "^1.0.1",
     "autoprefixer": "10.4.14",
     "axios": "^1.4.0",
